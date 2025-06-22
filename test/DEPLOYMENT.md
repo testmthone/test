@@ -315,4 +315,112 @@ Herhangi bir sorun yaşarsanız:
 
 - **Ana Sayfa**: `http://YOUR_SERVER_IP:5000`
 - **Admin Panel**: `http://YOUR_SERVER_IP:5000/admin/login`
-- **Giriş Bilgileri**: `admin` / `admin123` 
+- **Giriş Bilgileri**: `admin` / `admin123`
+
+## Self-Hosted Runner Güvenlik Rehberi
+
+### 🔒 Güvenlik Önlemleri
+
+#### 1. Runner Güvenliği
+```bash
+# Runner'ı izole bir kullanıcı ile çalıştırın
+sudo useradd -m -s /bin/bash github-runner
+sudo usermod -aG docker github-runner  # Eğer Docker kullanıyorsanız
+
+# Runner directory'sini güvenli yapın
+sudo chmod 750 /home/github-runner
+```
+
+#### 2. SSH Key Güvenliği
+```bash
+# Deployment için özel SSH key oluşturun
+ssh-keygen -t ed25519 -f ~/.ssh/deploy_key -N ""
+
+# Sunucuda authorized_keys'e ekleyin (sadece deployment için)
+echo "command=\"cd /var/www/portfolio && git pull && ./deploy.sh\",restrict $(cat ~/.ssh/deploy_key.pub)" >> ~/.ssh/authorized_keys
+```
+
+#### 3. GitHub Secrets Konfigürasyonu
+Repository Settings > Secrets and variables > Actions:
+- `SSH_PRIVATE_KEY`: Deploy key'in private kısmı
+- `SSH_HOST`: Sunucu IP/domain
+- `SSH_USER`: Deployment kullanıcısı
+
+### 🚀 Runner Kurulumu
+
+```bash
+# GitHub'dan runner'ı indirin
+mkdir actions-runner && cd actions-runner
+curl -o actions-runner-linux-x64-2.311.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.311.0/actions-runner-linux-x64-2.311.0.tar.gz
+tar xzf ./actions-runner-linux-x64-2.311.0.tar.gz
+
+# Konfigüre edin
+./config.sh --url https://github.com/USERNAME/REPO --token YOUR_TOKEN
+
+# Service olarak çalıştırın
+sudo ./svc.sh install
+sudo ./svc.sh start
+```
+
+### 📊 Monitoring
+
+Runner'ınızı izlemek için:
+```bash
+# Runner status
+sudo ./svc.sh status
+
+# Logs
+journalctl -u actions.runner.* -f
+```
+
+### ⚡ Performans Optimizasyonu
+
+Self-hosted runner avantajları:
+- ✅ Unlimited dakika
+- ✅ Daha hızlı network (local)
+- ✅ Persistent cache
+- ✅ Custom environment
+- ✅ Daha güçlü donanım
+
+### 🔄 Auto-Update Script
+
+```bash
+#!/bin/bash
+# update-runner.sh
+cd /home/github-runner/actions-runner
+sudo ./svc.sh stop
+./config.sh remove --token YOUR_TOKEN
+# Download latest version
+./config.sh --url https://github.com/USERNAME/REPO --token YOUR_TOKEN
+sudo ./svc.sh start
+```
+
+## Deployment Process
+
+1. **Push to main branch**
+2. **GitHub Actions trigger**
+3. **Self-hosted runner executes**
+4. **SSH to server**
+5. **Pull latest code**
+6. **Run deploy.sh**
+7. **Service restart**
+
+## Troubleshooting
+
+### Runner Offline?
+```bash
+sudo systemctl status actions.runner.*
+sudo systemctl restart actions.runner.*
+```
+
+### SSH Issues?
+```bash
+ssh -vvv user@server  # Debug connection
+ssh-keygen -R server_ip  # Remove old host key
+```
+
+### Permission Issues?
+```bash
+sudo chown -R github-runner:github-runner /home/github-runner/
+chmod 600 ~/.ssh/id_rsa
+``` 

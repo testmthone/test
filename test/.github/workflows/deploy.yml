@@ -6,22 +6,39 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: [self-hosted, mthserver]
     
     steps:
-    - name: Deploy via SSH
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup SSH and Deploy
       run: |
-        # Setup SSH
+        # Setup SSH securely
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
         
-        # Deploy
+        # Deploy with error handling
         ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-          cd /var/www/portfolio
-          git pull origin main
+          set -e  # Exit on any error
+          
+          echo "🚀 Starting deployment on mthserver..."
+          cd /var/www/portfolio || { echo "❌ Directory not found"; exit 1; }
+          
+          echo "📥 Pulling latest changes..."
+          git pull origin main || { echo "❌ Git pull failed"; exit 1; }
+          
+          echo "🔧 Running deployment script..."
           chmod +x deploy.sh
-          ./deploy.sh
-          echo "✅ Deployment completed!"
+          ./deploy.sh || { echo "❌ Deploy script failed"; exit 1; }
+          
+          echo "✅ Deployment completed successfully on mthserver!"
         EOF
+        
+    - name: Cleanup SSH
+      if: always()
+      run: |
+        rm -f ~/.ssh/id_rsa
+        echo "🧹 SSH cleanup completed on mthserver"
