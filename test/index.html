@@ -26,6 +26,28 @@
             scroll-behavior: smooth;
         }
 
+        /* Admin Login Button */
+        .admin-login-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #409cff, #7bb3ff);
+            color: #0f1419;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 1001;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(64, 156, 255, 0.3);
+        }
+
+        .admin-login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(64, 156, 255, 0.4);
+        }
+
         /* Navigation */
         .navbar {
             position: fixed;
@@ -580,6 +602,13 @@
             .section {
                 padding: 3rem 1rem;
             }
+
+            .admin-login-btn {
+                top: 10px;
+                right: 10px;
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
         }
 
         /* Scroll animations */
@@ -647,6 +676,11 @@
     <div class="loading" id="loading">
         <div class="spinner"></div>
     </div>
+
+    <!-- Admin Login Button -->
+    <a href="admin-login.html" class="admin-login-btn">
+        <i class="fas fa-user-shield"></i> Admin
+    </a>
 
     <!-- Navigation -->
     <nav class="navbar">

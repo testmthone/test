@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Portföy Yönetimi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a1929 0%, #1e3a5f 100%);
+            color: #e8f4fd;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(15, 20, 25, 0.95), rgba(26, 35, 50, 0.95));
+            backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(64, 156, 255, 0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 2rem;
+            border-bottom: 1px solid rgba(64, 156, 255, 0.2);
+            text-align: center;
+        }
+
+        .admin-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #409cff, #7bb3ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-subtitle {
+            font-size: 0.9rem;
+            color: #b8d4f0;
+        }
+
+        .sidebar-nav {
+            padding: 2rem 0;
+        }
+
+        .nav-item {
+            list-style: none;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            color: #b8d4f0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, rgba(64, 156, 255, 0.1), rgba(123, 179, 255, 0.1));
+            color: #409cff;
+            border-left-color: #409cff;
+        }
+
+        .nav-link i {
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .logout-btn {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(64, 156, 255, 0.2);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #409cff, #7bb3ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #409cff, #7bb3ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0f1419;
+            font-weight: 600;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: linear-gradient(135deg, rgba(15, 20, 25, 0.8), rgba(26, 35, 50, 0.8));
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(64, 156, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border-color: rgba(64, 156, 255, 0.4);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #409cff, #7bb3ff);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: #0f1419;
+            font-size: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e8f4fd;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #409cff;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            color: #b8d4f0;
+            font-size: 0.9rem;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: linear-gradient(135deg, rgba(15, 20, 25, 0.8), rgba(26, 35, 50, 0.8));
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(64, 156, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(64, 156, 255, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #409cff;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #409cff, #7bb3ff);
+            color: #0f1419;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(64, 156, 255, 0.4);
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(64, 156, 255, 0.2);
+        }
+
+        .admin-table th {
+            background: rgba(64, 156, 255, 0.1);
+            color: #409cff;
+            font-weight: 600;
+        }
+
+        .admin-table tr:hover {
+            background: rgba(64, 156, 255, 0.05);
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .view-btn {
+            background: linear-gradient(135deg, #409cff, #7bb3ff);
+            color: #0f1419;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #b8d4f0;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(15, 20, 25, 0.6);
+            border: 1px solid rgba(64, 156, 255, 0.3);
+            border-radius: 8px;
+            color: #e8f4fd;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #409cff;
+            box-shadow: 0 0 15px rgba(64, 156, 255, 0.3);
+            background: rgba(15, 20, 25, 0.8);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-read {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        .status-unread {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: linear-gradient(135deg, #409cff, #7bb3ff);
+            color: #0f1419;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Hidden sections */
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(64, 156, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #409cff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="admin-logo">Admin Panel</div>
+            <div class="admin-subtitle">Portföy Yönetimi</div>
+        </div>
+        
+        <ul class="sidebar-nav">
+            <li class="nav-item">
+                <a href="#dashboard" class="nav-link active" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#profile" class="nav-link" data-section="profile">
+                    <i class="fas fa-user"></i>
+                    Profil Bilgileri
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#projects" class="nav-link" data-section="projects">
+                    <i class="fas fa-project-diagram"></i>
+                    Projeler
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#messages" class="nav-link" data-section="messages">
+                    <i class="fas fa-envelope"></i>
+                    Mesajlar
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#skills" class="nav-link" data-section="skills">
+                    <i class="fas fa-code"></i>
+                    Yetenekler
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#settings" class="nav-link" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    Ayarlar
+                </a>
+            </li>
+        </ul>
+
+        <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Çıkış Yap
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div>
+                <button class="mobile-menu-btn" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title" id="pageTitle">Dashboard</h1>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <span>Admin</span>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section-content active">
+            <!-- Dashboard Cards -->
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="card-title">Toplam Görüntülenme</div>
+                    </div>
+                    <div class="card-value">1,247</div>
+                    <div class="card-description">Bu ay +12% artış</div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="card-title">Yeni Mesajlar</div>
+                    </div>
+                    <div class="card-value">8</div>
+                    <div class="card-description">Okunmamış mesajlar</div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <div class="card-title">Aktif Projeler</div>
+                    </div>
+                    <div class="card-value">12</div>
+                    <div class="card-description">Toplam proje sayısı</div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="card-title">Yetenekler</div>
+                    </div>
+                    <div class="card-value">7</div>
+                    <div class="card-description">Listelenen yetenek</div>
+                </div>
+            </div>
+
+            <!-- Recent Messages -->
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Son Mesajlar</h2>
+                    <button class="add-btn" onclick="showSection('messages')">
+                        <i class="fas fa-eye"></i> Tümünü Gör
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Gönderen</th>
+                                <th>E-posta</th>
+                                <th>Mesaj</th>
+                                <th>Tarih</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ahmet Yılmaz</td>
+                                <td>ahmet@example.com</td>
+                                <td>Proje teklifiniz hakkında bilgi almak istiyorum...</td>
+                                <td>2024-01-15</td>
+                                <td><span class="status-badge status-unread">Yeni</span></td>
+                                <td>
+                                    <button class="action-btn view-btn">Görüntüle</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ayşe Demir</td>
+                                <td>ayse@example.com</td>
+                                <td>Web sitesi projesi için görüşmek istiyorum...</td>
+                                <td>2024-01-14</td>
+                                <td><span class="status-badge status-read">Okundu</span></td>
+                                <td>
+                                    <button class="action-btn view-btn">Görüntüle</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profile" class="section-content">
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Profil Bilgileri</h2>
+                    <button class="add-btn" onclick="saveProfile()">
+                        <i class="fas fa-save"></i> Kaydet
+                    </button>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Ad Soyad</label>
+                        <input type="text" id="name" value="Alperen Toker">
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Ünvan</label>
+                        <input type="text" id="title" value="Software Developer and AI,Data Engineer">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-posta</label>
+                        <input type="email" id="email" value="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Telefon</label>
+                        <input type="tel" id="phone" value="+90 555 123 4567">
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Konum</label>
+                        <input type="text" id="location" value="İstanbul, Türkiye">
+                    </div>
+                    <div class="form-group">
+                        <label for="profileImage">Profil Fotoğrafı</label>
+                        <input type="file" id="profileImage" accept="image/*">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="about">Hakkımda</label>
+                    <textarea id="about" rows="6">5+ yıllık deneyimimle web geliştirme alanında uzmanlaşmış bir yazılım geliştiricisiyim. Modern teknolojileri kullanarak kullanıcı dostu ve performanslı web uygulamaları geliştiriyorum.</textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Section -->
+        <div id="projects" class="section-content">
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Projeler</h2>
+                    <button class="add-btn" onclick="addProject()">
+                        <i class="fas fa-plus"></i> Yeni Proje
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Proje Adı</th>
+                                <th>Açıklama</th>
+                                <th>Teknolojiler</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>E-Ticaret Platformu</td>
+                                <td>Modern ve kullanıcı dostu bir e-ticaret platformu</td>
+                                <td>React, Node.js</td>
+                                <td><span class="status-badge status-read">Aktif</span></td>
+                                <td>
+                                    <button class="action-btn edit-btn">Düzenle</button>
+                                    <button class="action-btn delete-btn">Sil</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Mobil Uygulama</td>
+                                <td>React Native ile geliştirilmiş cross-platform mobil uygulama</td>
+                                <td>React Native</td>
+                                <td><span class="status-badge status-read">Aktif</span></td>
+                                <td>
+                                    <button class="action-btn edit-btn">Düzenle</button>
+                                    <button class="action-btn delete-btn">Sil</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Section -->
+        <div id="messages" class="section-content">
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Mesajlar</h2>
+                    <button class="add-btn" onclick="refreshMessages()">
+                        <i class="fas fa-sync"></i> Yenile
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Gönderen</th>
+                                <th>E-posta</th>
+                                <th>Mesaj</th>
+                                <th>Tarih</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ahmet Yılmaz</td>
+                                <td>ahmet@example.com</td>
+                                <td>Proje teklifiniz hakkında bilgi almak istiyorum. Detaylı bir görüşme yapabilir miyiz?</td>
+                                <td>2024-01-15 14:30</td>
+                                <td><span class="status-badge status-unread">Yeni</span></td>
+                                <td>
+                                    <button class="action-btn view-btn">Görüntüle</button>
+                                    <button class="action-btn edit-btn">Yanıtla</button>
+                                    <button class="action-btn delete-btn">Sil</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ayşe Demir</td>
+                                <td>ayse@example.com</td>
+                                <td>Web sitesi projesi için görüşmek istiyorum. Fiyat teklifinizi alabilir miyim?</td>
+                                <td>2024-01-14 16:45</td>
+                                <td><span class="status-badge status-read">Okundu</span></td>
+                                <td>
+                                    <button class="action-btn view-btn">Görüntüle</button>
+                                    <button class="action-btn edit-btn">Yanıtla</button>
+                                    <button class="action-btn delete-btn">Sil</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills Section -->
+        <div id="skills" class="section-content">
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Yetenekler</h2>
+                    <button class="add-btn" onclick="addSkill()">
+                        <i class="fas fa-plus"></i> Yeni Yetenek
+                    </button>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="skillName">Yetenek Adı</label>
+                        <input type="text" id="skillName" placeholder="Örn: JavaScript">
+                    </div>
+                    <div class="form-group">
+                        <label for="skillLevel">Seviye (%)</label>
+                        <input type="number" id="skillLevel" min="0" max="100" placeholder="85">
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Yetenek</th>
+                                <th>Seviye</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>C#</td>
+                                <td>90%</td>
+                                <td>
+                                    <button class="action-btn edit-btn">Düzenle</button>
+                                    <button class="action-btn delete-btn">Sil</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>JavaScript</td>
+                                <td>85%</td>
+                                <td>
+                                    <button class="action-btn edit-btn">Düzenle</button>
+                                    <button class="action-btn delete-btn">Sil</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Python</td>
+                                <td>80%</td>
+                                <td>
+                                    <button class="action-btn edit-btn">Düzenle</button>
+                                    <button class="action-btn delete-btn">Sil</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settings" class="section-content">
+            <div class="content-section">
+                <div class="section-header">
+                    <h2 class="section-title">Ayarlar</h2>
+                    <button class="add-btn" onclick="saveSettings()">
+                        <i class="fas fa-save"></i> Kaydet
+                    </button>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="siteTitle">Site Başlığı</label>
+                        <input type="text" id="siteTitle" value="Ben Kimim - Kişisel Portföy">
+                    </div>
+                    <div class="form-group">
+                        <label for="theme">Tema</label>
+                        <select id="theme">
+                            <option value="metallic-blue" selected>Metalik Mavi</option>
+                            <option value="dark">Koyu</option>
+                            <option value="light">Açık</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminEmail">Admin E-posta</label>
+                        <input type="email" id="adminEmail" value="admin@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="notifications">Bildirimler</label>
+                        <select id="notifications">
+                            <option value="enabled" selected>Aktif</option>
+                            <option value="disabled">Pasif</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links and sections
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Show corresponding section
+                const sectionId = this.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+                
+                // Update page title
+                document.getElementById('pageTitle').textContent = this.textContent.trim();
+            });
+        });
+
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+                window.location.href = 'admin-login.html';
+            }
+        }
+
+        // Save profile
+        function saveProfile() {
+            // Show loading
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="loading"></span> Kaydediliyor...';
+            
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-check"></i> Kaydedildi!';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            }, 1500);
+        }
+
+        // Add project
+        function addProject() {
+            alert('Yeni proje ekleme özelliği yakında eklenecek!');
+        }
+
+        // Refresh messages
+        function refreshMessages() {
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="loading"></span> Yenileniyor...';
+            
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-check"></i> Yenilendi!';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            }, 1000);
+        }
+
+        // Add skill
+        function addSkill() {
+            const skillName = document.getElementById('skillName').value;
+            const skillLevel = document.getElementById('skillLevel').value;
+            
+            if (skillName && skillLevel) {
+                alert(`${skillName} yeteneği %${skillLevel} seviyesinde eklendi!`);
+                document.getElementById('skillName').value = '';
+                document.getElementById('skillLevel').value = '';
+            } else {
+                alert('Lütfen tüm alanları doldurun!');
+            }
+        }
+
+        // Save settings
+        function saveSettings() {
+            const btn = event.target;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="loading"></span> Kaydediliyor...';
+            
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-check"></i> Kaydedildi!';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            }, 1500);
+        }
+
+        // Show section
+        function showSection(sectionId) {
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+            
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.getElementById('pageTitle').textContent = 
+                document.querySelector(`[data-section="${sectionId}"]`).textContent.trim();
+        }
+
+        // Action buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('view-btn')) {
+                alert('Görüntüleme özelliği yakında eklenecek!');
+            } else if (e.target.classList.contains('edit-btn')) {
+                alert('Düzenleme özelliği yakında eklenecek!');
+            } else if (e.target.classList.contains('delete-btn')) {
+                if (confirm('Bu öğeyi silmek istediğinizden emin misiniz?')) {
+                    alert('Silme işlemi başarılı!');
+                }
+            }
+        });
+
+        // Auto-hide sidebar on mobile when clicking outside
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 1024) {
+                const sidebar = document.getElementById('sidebar');
+                const mobileBtn = document.querySelector('.mobile-menu-btn');
+                
+                if (!sidebar.contains(e.target) && !mobileBtn.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
+            }
+        });
+    </script>
+</body>
+</html> 
