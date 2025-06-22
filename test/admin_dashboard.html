@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Portfolio</title>
+    <link rel="stylesheet" href="static/css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Admin Panel</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#dashboard" class="nav-link active" data-section="dashboard">📊 Dashboard</a></li>
+                    <li><a href="#projects" class="nav-link" data-section="projects">📁 Projeler</a></li>
+                    <li><a href="#messages" class="nav-link" data-section="messages">💬 Mesajlar</a></li>
+                    <li><a href="#skills" class="nav-link" data-section="skills">🎯 Yetenekler</a></li>
+                    <li><a href="#settings" class="nav-link" data-section="settings">⚙️ Ayarlar</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="admin_login.html" class="logout-btn">🚪 Çıkış Yap</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="section-header">
+                    <h1>Dashboard</h1>
+                    <p>Portfolio yönetim paneli genel bakış</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📁</div>
+                        <div class="stat-content">
+                            <h3>{{ stats.projects }}</h3>
+                            <p>Toplam Proje</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💬</div>
+                        <div class="stat-content">
+                            <h3>{{ stats.messages }}</h3>
+                            <p>Toplam Mesaj</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📧</div>
+                        <div class="stat-content">
+                            <h3>{{ stats.unread_messages }}</h3>
+                            <p>Okunmamış Mesaj</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-content">
+                            <h3>{{ stats.skills }}</h3>
+                            <p>Toplam Yetenek</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-content">
+                    <div class="recent-messages">
+                        <h3>Son Mesajlar</h3>
+                        <div class="message-list">
+                            {% for message in recent_messages %}
+                            <div class="message-item">
+                                <div class="message-header">
+                                    <span class="message-name">{{ message.name }}</span>
+                                    <span class="message-date">{{ message.created_at.strftime('%d.%m.%Y') }}</span>
+                                </div>
+                                <p class="message-subject">{{ message.subject }}</p>
+                                <p class="message-preview">{{ message.message[:100] }}...</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="recent-projects">
+                        <h3>Son Projeler</h3>
+                        <div class="project-list">
+                            {% for project in recent_projects %}
+                            <div class="project-item">
+                                <h4>{{ project.title }}</h4>
+                                <p>{{ project.description[:100] }}...</p>
+                                <span class="project-date">{{ project.created_at.strftime('%d.%m.%Y') }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="content-section">
+                <div class="section-header">
+                    <h1>Proje Yönetimi</h1>
+                    <button class="btn btn-primary" onclick="openProjectModal()">+ Yeni Proje</button>
+                </div>
+                
+                <div class="projects-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Başlık</th>
+                                <th>Açıklama</th>
+                                <th>Teknolojiler</th>
+                                <th>Tarih</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projectsTableBody">
+                            <!-- Projects will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Messages Section -->
+            <section id="messages" class="content-section">
+                <div class="section-header">
+                    <h1>Mesaj Yönetimi</h1>
+                </div>
+                
+                <div class="messages-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ad</th>
+                                <th>E-posta</th>
+                                <th>Konu</th>
+                                <th>Mesaj</th>
+                                <th>Tarih</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="messagesTableBody">
+                            <!-- Messages will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section id="skills" class="content-section">
+                <div class="section-header">
+                    <h1>Yetenek Yönetimi</h1>
+                    <button class="btn btn-primary" onclick="openSkillModal()">+ Yeni Yetenek</button>
+                </div>
+                
+                <div class="skills-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Yetenek</th>
+                                <th>Kategori</th>
+                                <th>Yüzde</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="skillsTableBody">
+                            <!-- Skills will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+                <div class="section-header">
+                    <h1>Ayarlar</h1>
+                </div>
+                
+                <div class="settings-content">
+                    <div class="setting-card">
+                        <h3>Profil Ayarları</h3>
+                        <form class="settings-form">
+                            <div class="form-group">
+                                <label>Kullanıcı Adı</label>
+                                <input type="text" value="admin" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>E-posta</label>
+                                <input type="email" value="admin@example.com">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Güncelle</button>
+                        </form>
+                    </div>
+                    
+                    <div class="setting-card">
+                        <h3>Güvenlik Ayarları</h3>
+                        <div class="security-actions">
+                            <button class="btn btn-secondary" onclick="openChangePasswordModal()">Şifre Değiştir</button>
+                            <p class="security-note">Güvenliğiniz için şifrenizi düzenli olarak değiştirin.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Yeni Proje</h2>
+                <span class="close" onclick="closeProjectModal()">&times;</span>
+            </div>
+            <form id="projectForm">
+                <div class="form-group">
+                    <label>Proje Başlığı</label>
+                    <input type="text" id="projectTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Açıklama</label>
+                    <textarea id="projectDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Resim URL</label>
+                    <input type="url" id="projectImage">
+                </div>
+                <div class="form-group">
+                    <label>GitHub URL</label>
+                    <input type="url" id="projectGithub">
+                </div>
+                <div class="form-group">
+                    <label>Canlı Demo URL</label>
+                    <input type="url" id="projectLive">
+                </div>
+                <div class="form-group">
+                    <label>Teknolojiler</label>
+                    <input type="text" id="projectTech">
+                </div>
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Skill Modal -->
+    <div id="skillModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Yeni Yetenek</h2>
+                <span class="close" onclick="closeSkillModal()">&times;</span>
+            </div>
+            <form id="skillForm">
+                <div class="form-group">
+                    <label>Yetenek Adı</label>
+                    <input type="text" id="skillName" required>
+                </div>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select id="skillCategory" required>
+                        <option value="frontend">Frontend</option>
+                        <option value="backend">Backend</option>
+                        <option value="other">Diğer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Yüzde (%)</label>
+                    <input type="number" id="skillPercentage" min="0" max="100" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Şifre Değiştir</h2>
+                <span class="close" onclick="closeChangePasswordModal()">&times;</span>
+            </div>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label>Mevcut Şifre</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>Yeni Şifre</label>
+                    <input type="password" id="newPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>Yeni Şifre (Tekrar)</label>
+                    <input type="password" id="confirmPassword" required minlength="6">
+                </div>
+                <div class="password-requirements">
+                    <p>Şifre gereksinimleri:</p>
+                    <ul>
+                        <li>En az 6 karakter</li>
+                        <li>Güçlü bir şifre kullanın</li>
+                    </ul>
+                </div>
+                <button type="submit" class="btn btn-primary">Şifre Değiştir</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="static/js/admin.js"></script>
+</body>
+</html> 
