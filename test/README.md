@@ -1,167 +1,284 @@
-# 🚀 Kişisel Portföy Sitesi - Admin Panelli
+# Portfolio Web Uygulaması
 
-Modern, metalik mavi temalı kişisel portföy sitesi ile tam özellikli admin yönetim paneli.
+Modern ve responsive bir portfolio web uygulaması. Flask backend, PostgreSQL veritabanı ve metallic blue tema ile geliştirilmiştir.
 
-## 📋 İçerik
+## 🚀 Özellikler
 
-- [Özellikler](#özellikler)
-- [Dosya Yapısı](#dosya-yapısı)
-- [Kurulum](#kurulum)
-- [Kullanım](#kullanım)
-- [Admin Paneli](#admin-paneli)
-- [Özelleştirme](#özelleştirme)
-- [Teknolojiler](#teknolojiler)
+### Ana Sayfa
+- **Responsive Tasarım**: Tüm cihazlarda mükemmel görünüm
+- **Metallic Blue Tema**: Modern ve şık tasarım
+- **Hızlı Yükleme**: 1 saniye loading animasyonu
+- **Smooth Scrolling**: Yumuşak sayfa geçişleri
+- **Contact Form**: Gerçek zamanlı mesaj gönderme
 
-## ✨ Özellikler
-
-### 🌐 Ana Site
-- **Modern Tasarım**: Metalik mavi tema ile şık görünüm
-- **Responsive**: Tüm cihazlarda mükemmel görünüm
-- **Animasyonlar**: Smooth scroll ve hover efektleri
-- **SEO Dostu**: Optimize edilmiş HTML yapısı
-- **Hızlı Yükleme**: Optimize edilmiş performans
-
-### 🔧 Admin Paneli
-- **Güvenli Giriş**: Ayrı admin giriş sayfası
+### Admin Paneli
+- **Güvenli Giriş**: Şifreli admin authentication
 - **Dashboard**: İstatistikler ve genel bakış
-- **İçerik Yönetimi**: Profil, projeler, yetenekler
-- **Mesaj Yönetimi**: Gelen mesajları görüntüleme ve yanıtlama
-- **Ayarlar**: Site ayarları ve tema seçenekleri
-
-## 📁 Dosya Yapısı
-
-```
-test/
-├── index.html              # Ana portföy sayfası
-├── admin-login.html        # Admin giriş sayfası
-├── admin-dashboard.html    # Admin yönetim paneli
-└── README.md              # Bu dosya
-```
-
-## 🚀 Kurulum
-
-1. **Dosyaları İndirin**: Tüm dosyaları web sunucunuza yükleyin
-2. **Tarayıcıda Açın**: `index.html` dosyasını tarayıcıda açın
-3. **Admin Erişimi**: Sağ üst köşedeki "Admin" butonuna tıklayın
-
-## 💻 Kullanım
-
-### Ana Site Navigasyonu
-- **Hakkımda**: Kişisel bilgiler ve yetenekler
-- **Projeler**: Tamamlanan projeler ve çalışmalar
-- **İletişim**: İletişim formu ve bilgileri
-
-### Admin Paneli Erişimi
-1. Ana sayfada sağ üst köşedeki "Admin" butonuna tıklayın
-2. Giriş bilgilerini girin:
-   - **Kullanıcı Adı**: `admin`
-   - **Şifre**: `admin123`
-3. Dashboard'a yönlendirileceksiniz
-
-## 🔐 Admin Paneli
-
-### Dashboard
-- **İstatistikler**: Görüntülenme, mesaj, proje sayıları
-- **Son Mesajlar**: Gelen mesajların özeti
-- **Hızlı Erişim**: Diğer bölümlere kolay geçiş
-
-### Profil Yönetimi
-- **Kişisel Bilgiler**: Ad, ünvan, iletişim bilgileri
-- **Hakkımda Metni**: Kişisel açıklama düzenleme
-- **Profil Fotoğrafı**: Resim yükleme
-
-### Proje Yönetimi
-- **Proje Ekleme**: Yeni projeler ekleme
-- **Proje Düzenleme**: Mevcut projeleri güncelleme
-- **Proje Silme**: Projeleri kaldırma
-
-### Mesaj Yönetimi
-- **Mesaj Görüntüleme**: Gelen mesajları okuma
-- **Mesaj Yanıtlama**: Mesajlara yanıt verme
-- **Mesaj Silme**: Mesajları kaldırma
-- **Durum Takibi**: Okundu/okunmadı durumu
-
-### Yetenek Yönetimi
-- **Yetenek Ekleme**: Yeni yetenekler ekleme
-- **Seviye Belirleme**: Yetenek seviyelerini ayarlama
-- **Yetenek Düzenleme**: Mevcut yetenekleri güncelleme
-
-### Ayarlar
-- **Site Başlığı**: Site adını değiştirme
-- **Tema Seçimi**: Farklı tema seçenekleri
-- **Bildirimler**: Bildirim ayarları
-- **Admin E-posta**: Yönetici e-posta adresi
-
-## 🎨 Özelleştirme
-
-### Renk Teması
-Ana renkler `#409cff` (mavi) ve `#7bb3ff` (açık mavi) olarak ayarlanmıştır. CSS dosyasından kolayca değiştirilebilir.
-
-### İçerik Güncelleme
-1. **Admin paneline giriş yapın**
-2. **İlgili bölümü seçin** (Profil, Projeler, vb.)
-3. **Değişiklikleri yapın**
-4. **Kaydet butonuna tıklayın**
-
-### Yeni Özellik Ekleme
-- HTML yapısını genişletin
-- CSS stillerini ekleyin
-- JavaScript fonksiyonlarını güncelleyin
+- **Proje Yönetimi**: CRUD işlemleri
+- **Mesaj Yönetimi**: Gelen mesajları görüntüleme ve yönetme
+- **Yetenek Yönetimi**: Skill bar'ları düzenleme
+- **Responsive Admin**: Mobil uyumlu yönetim paneli
 
 ## 🛠️ Teknolojiler
 
-- **HTML5**: Modern semantik yapı
-- **CSS3**: Flexbox, Grid, Animasyonlar
-- **JavaScript**: ES6+ özellikleri
-- **Font Awesome**: İkonlar
-- **Google Fonts**: Poppins font ailesi
+### Backend
+- **Python 3.8+**
+- **Flask 2.3.3**
+- **Flask-SQLAlchemy 3.0.5**
+- **Flask-Login 0.6.3**
+- **PostgreSQL 15**
 
-## 🔒 Güvenlik
+### Frontend
+- **HTML5**
+- **CSS3** (Custom, no frameworks)
+- **JavaScript (ES6+)**
+- **Responsive Design**
 
-### Demo Giriş Bilgileri
+### Veritabanı
+- **PostgreSQL** (Docker ile)
+
+## 📋 Gereksinimler
+
+- Python 3.8 veya üzeri
+- Docker ve Docker Compose
+- Git
+
+## 🚀 Kurulum
+
+### 1. Projeyi Klonlayın
+```bash
+git clone <repository-url>
+cd test
+```
+
+### 2. PostgreSQL Veritabanını Başlatın
+```bash
+docker-compose up -d postgres
+```
+
+### 3. Python Sanal Ortamı Oluşturun
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# veya
+venv\Scripts\activate  # Windows
+```
+
+### 4. Gerekli Paketleri Yükleyin
+```bash
+pip install -r requirements.txt
+```
+
+### 5. Uygulamayı Çalıştırın
+```bash
+python app.py
+```
+
+Uygulama `http://localhost:5000` adresinde çalışacaktır.
+
+## 🔐 Admin Girişi
+
+Admin paneline erişmek için:
+- **URL**: `http://localhost:5000/admin/login`
 - **Kullanıcı Adı**: `admin`
 - **Şifre**: `admin123`
 
-### Güvenlik Önerileri
-1. **Şifre Değiştirme**: Demo şifrelerini değiştirin
-2. **HTTPS Kullanımı**: Güvenli bağlantı kullanın
-3. **Düzenli Yedekleme**: Verilerinizi yedekleyin
-4. **Güncellemeler**: Sisteminizi güncel tutun
+## 📁 Proje Yapısı
 
-## 📱 Responsive Tasarım
+```
+test/
+├── app.py                 # Ana Flask uygulaması
+├── requirements.txt       # Python bağımlılıkları
+├── docker-compose.yml    # PostgreSQL Docker konfigürasyonu
+├── README.md             # Bu dosya
+├── templates/            # HTML template'leri
+│   ├── index.html        # Ana sayfa
+│   ├── admin_login.html  # Admin giriş sayfası
+│   └── admin_dashboard.html # Admin paneli
+└── static/               # Statik dosyalar
+    ├── css/
+    │   ├── style.css     # Ana sayfa stilleri
+    │   └── admin.css     # Admin paneli stilleri
+    ├── js/
+    │   ├── script.js     # Ana sayfa JavaScript
+    │   └── admin.js      # Admin paneli JavaScript
+    └── images/           # Resim dosyaları
+```
 
-Site tüm cihazlarda mükemmel görünür:
-- **Desktop**: 1200px ve üzeri
-- **Tablet**: 768px - 1199px
-- **Mobile**: 767px ve altı
+## 🗄️ Veritabanı Modelleri
 
-## 🎯 Performans
+### User
+- `id`: Primary Key
+- `username`: Kullanıcı adı
+- `email`: E-posta adresi
+- `password_hash`: Şifrelenmiş parola
+- `is_admin`: Admin yetkisi
+- `created_at`: Oluşturulma tarihi
 
-- **Hızlı Yükleme**: Optimize edilmiş kod
-- **Smooth Animasyonlar**: 60fps animasyonlar
-- **Lazy Loading**: Görsel optimizasyonu
-- **Minified CSS**: Küçültülmüş dosya boyutu
+### Project
+- `id`: Primary Key
+- `title`: Proje başlığı
+- `description`: Proje açıklaması
+- `image_url`: Proje resmi URL'i
+- `github_url`: GitHub linki
+- `live_url`: Canlı demo linki
+- `technologies`: Kullanılan teknolojiler
+- `created_at`: Oluşturulma tarihi
 
-## 🚀 Gelecek Özellikler
+### Message
+- `id`: Primary Key
+- `name`: Gönderen adı
+- `email`: Gönderen e-postası
+- `subject`: Mesaj konusu
+- `message`: Mesaj içeriği
+- `created_at`: Gönderilme tarihi
+- `is_read`: Okundu durumu
 
-- [ ] Blog sistemi
-- [ ] Portföy galerisi
-- [ ] Çoklu dil desteği
-- [ ] Analytics entegrasyonu
-- [ ] E-posta bildirimleri
-- [ ] Dosya yükleme sistemi
+### Skill
+- `id`: Primary Key
+- `name`: Yetenek adı
+- `percentage`: Yüzde değeri
+- `category`: Kategori (frontend/backend/other)
 
-## 📞 Destek
+## 🔧 API Endpoints
 
-Herhangi bir sorun yaşarsanız:
-1. README dosyasını kontrol edin
-2. Tarayıcı konsolunu inceleyin
-3. Dosya izinlerini kontrol edin
+### Projeler
+- `GET /api/projects` - Tüm projeleri listele
+- `POST /api/projects` - Yeni proje oluştur
+- `PUT /api/projects/<id>` - Proje güncelle
+- `DELETE /api/projects/<id>` - Proje sil
+
+### Mesajlar
+- `GET /api/messages` - Tüm mesajları listele
+- `POST /api/messages/<id>/read` - Mesajı okundu olarak işaretle
+
+### Yetenekler
+- `GET /api/skills` - Tüm yetenekleri listele
+- `POST /api/skills` - Yeni yetenek oluştur
+- `PUT /api/skills/<id>` - Yetenek güncelle
+- `DELETE /api/skills/<id>` - Yetenek sil
+
+### İletişim
+- `POST /contact` - Yeni mesaj gönder
+
+## 🎨 Tema Özellikleri
+
+### Metallic Blue Tema
+- **Ana Renk**: `#409cff`
+- **İkincil Renk**: `#7bb3ff`
+- **Arka Plan**: Gradient `#0f1419` to `#1a2332`
+- **Metallic Efektler**: Glow ve shadow efektleri
+- **Responsive**: Tüm ekran boyutlarında uyumlu
+
+### Animasyonlar
+- **Loading**: 1 saniye spinner animasyonu
+- **Hover Effects**: Kart ve buton hover efektleri
+- **Scroll Animations**: Sayfa kaydırma animasyonları
+- **Skill Bars**: Yetenek çubukları animasyonu
+
+## 🔒 Güvenlik
+
+- **Password Hashing**: Werkzeug ile şifre hashleme
+- **Session Management**: Flask-Login ile oturum yönetimi
+- **CSRF Protection**: Form güvenliği
+- **Input Validation**: Giriş doğrulama
+- **SQL Injection Protection**: SQLAlchemy ORM
+
+## 🚀 Deployment
+
+### Production için Öneriler
+
+1. **Environment Variables**:
+```bash
+export SECRET_KEY="your-super-secret-key"
+export DATABASE_URL="postgresql://user:password@host:port/db"
+export FLASK_ENV="production"
+```
+
+2. **WSGI Server**:
+```bash
+pip install gunicorn
+gunicorn -w 4 -b 0.0.0.0:5000 app:app
+```
+
+3. **Nginx Reverse Proxy**:
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com;
+    
+    location / {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+## 🐛 Sorun Giderme
+
+### PostgreSQL Bağlantı Hatası
+```bash
+# Docker container'ı kontrol edin
+docker ps
+
+# PostgreSQL loglarını kontrol edin
+docker logs portfolio_postgres
+
+# Veritabanını yeniden başlatın
+docker-compose down
+docker-compose up -d postgres
+```
+
+### Port Çakışması
+```bash
+# 5000 portunu kullanan işlemleri kontrol edin
+lsof -i :5000
+
+# Farklı port kullanın
+python app.py --port 5001
+```
+
+## 📝 Geliştirme
+
+### Yeni Özellik Ekleme
+1. Veritabanı modelini güncelleyin
+2. Flask route'larını ekleyin
+3. Template'leri güncelleyin
+4. JavaScript fonksiyonlarını ekleyin
+5. CSS stillerini güncelleyin
+
+### Test Etme
+```bash
+# Flask test modunda çalıştırın
+export FLASK_ENV=development
+python app.py
+```
+
+## 🤝 Katkıda Bulunma
+
+1. Fork yapın
+2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Commit yapın (`git commit -m 'Add amazing feature'`)
+4. Push yapın (`git push origin feature/amazing-feature`)
+5. Pull Request oluşturun
 
 ## 📄 Lisans
 
 Bu proje MIT lisansı altında lisanslanmıştır.
 
+## 📞 İletişim
+
+- **E-posta**: alperen@example.com
+- **GitHub**: [@alperen](https://github.com/alperen)
+
+## 🙏 Teşekkürler
+
+- Flask framework
+- PostgreSQL
+- Modern CSS ve JavaScript
+- Docker community
+
 ---
 
-**Not**: Bu demo versiyonudur. Canlı kullanım için güvenlik ayarlarını yapılandırın ve demo bilgilerini değiştirin. 
+**Not**: Bu proje eğitim amaçlı geliştirilmiştir. Production kullanımı için ek güvenlik önlemleri alınmalıdır. 
