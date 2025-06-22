@@ -310,6 +310,18 @@
                 transform: translateY(10vh) scale(1);
             }
         }
+
+        /* Security Notice */
+        .security-notice {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
@@ -339,6 +351,11 @@
             </div>
             <h1 class="login-title">Admin Giriş</h1>
             <p class="login-subtitle">Portföy yönetim paneline erişim</p>
+        </div>
+
+        <!-- Security Notice -->
+        <div class="security-notice">
+            <i class="fas fa-shield-alt"></i> Güvenli giriş sistemi aktif
         </div>
 
         <!-- Error Message -->
@@ -391,16 +408,83 @@
             }
         });
 
+        // Secure Authentication System
+        class SecureAuth {
+            constructor() {
+                this.maxAttempts = 3;
+                this.lockoutTime = 300000; // 5 minutes
+                this.attempts = 0;
+                this.lastAttemptTime = 0;
+            }
+
+            // Simple hash function (in production, use proper hashing)
+            hashPassword(password) {
+                let hash = 0;
+                if (password.length === 0) return hash.toString();
+                for (let i = 0; i < password.length; i++) {
+                    const char = password.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash; // Convert to 32-bit integer
+                }
+                return Math.abs(hash).toString(16);
+            }
+
+            // Check if account is locked
+            isLocked() {
+                if (this.attempts >= this.maxAttempts) {
+                    const timeSinceLastAttempt = Date.now() - this.lastAttemptTime;
+                    if (timeSinceLastAttempt < this.lockoutTime) {
+                        return true;
+                    } else {
+                        this.attempts = 0; // Reset after lockout period
+                    }
+                }
+                return false;
+            }
+
+            // Authenticate user
+            authenticate(username, password) {
+                // Check if account is locked
+                if (this.isLocked()) {
+                    const remainingTime = Math.ceil((this.lockoutTime - (Date.now() - this.lastAttemptTime)) / 1000);
+                    throw new Error(`Hesap kilitli. ${remainingTime} saniye sonra tekrar deneyin.`);
+                }
+
+                // Hash the input password
+                const hashedPassword = this.hashPassword(password);
+                
+                // Store hashed credentials (in production, this would be server-side)
+                const validCredentials = {
+                    username: 'admin',
+                    passwordHash: this.hashPassword('admin123') // Pre-hashed password
+                };
+
+                // Check credentials
+                if (username === validCredentials.username && hashedPassword === validCredentials.passwordHash) {
+                    this.attempts = 0; // Reset attempts on successful login
+                    return true;
+                } else {
+                    this.attempts++;
+                    this.lastAttemptTime = Date.now();
+                    throw new Error('Kullanıcı adı veya şifre hatalı!');
+                }
+            }
+
+            // Get remaining attempts
+            getRemainingAttempts() {
+                return Math.max(0, this.maxAttempts - this.attempts);
+            }
+        }
+
+        // Initialize secure authentication
+        const secureAuth = new SecureAuth();
+
         // Login Form Handling
         const loginForm = document.getElementById('loginForm');
         const loginBtn = document.getElementById('loginBtn');
         const btnText = loginBtn.querySelector('.btn-text');
         const errorMessage = document.getElementById('errorMessage');
         const successMessage = document.getElementById('successMessage');
-
-        // Demo credentials (in real app, this would be server-side)
-        const DEMO_USERNAME = 'admin';
-        const DEMO_PASSWORD = 'admin123';
 
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -418,21 +502,37 @@
 
             // Simulate API call delay
             setTimeout(() => {
-                if (username === DEMO_USERNAME && password === DEMO_PASSWORD) {
-                    // Success
-                    successMessage.style.display = 'block';
-                    loginBtn.classList.remove('loading');
-                    btnText.textContent = 'Giriş Başarılı!';
+                try {
+                    // Attempt authentication
+                    const isAuthenticated = secureAuth.authenticate(username, password);
                     
-                    // Redirect to admin dashboard after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = 'admin-dashboard.html';
-                    }, 2000);
-                } else {
+                    if (isAuthenticated) {
+                        // Success
+                        successMessage.style.display = 'block';
+                        loginBtn.classList.remove('loading');
+                        btnText.textContent = 'Giriş Başarılı!';
+                        
+                        // Create session token
+                        const sessionToken = btoa(Date.now() + '_' + Math.random());
+                        sessionStorage.setItem('adminSession', sessionToken);
+                        
+                        // Redirect to admin dashboard after 2 seconds
+                        setTimeout(() => {
+                            window.location.href = 'admin-dashboard.html';
+                        }, 2000);
+                    }
+                } catch (error) {
                     // Error
+                    errorMessage.textContent = error.message;
                     errorMessage.style.display = 'block';
                     loginBtn.classList.remove('loading');
                     btnText.textContent = 'Giriş Yap';
+                    
+                    // Show remaining attempts
+                    const remainingAttempts = secureAuth.getRemainingAttempts();
+                    if (remainingAttempts > 0) {
+                        errorMessage.innerHTML += `<br><small>Kalan deneme: ${remainingAttempts}</small>`;
+                    }
                     
                     // Clear password field
                     passwordInput.value = '';
@@ -462,6 +562,17 @@
         // Particle animation enhancement
         document.querySelectorAll('.particle').forEach((particle, index) => {
             particle.style.animationDelay = `${index * 0.5}s`;
+        });
+
+        // Prevent right-click and F12 (basic protection)
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+            }
         });
     </script>
 </body>

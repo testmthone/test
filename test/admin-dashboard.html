@@ -848,6 +848,24 @@
     </div>
 
     <script>
+        // Session Validation
+        function checkSession() {
+            const sessionToken = sessionStorage.getItem('adminSession');
+            if (!sessionToken) {
+                alert('Oturum bulunamadı. Lütfen tekrar giriş yapın.');
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Check session on page load
+        window.addEventListener('load', function() {
+            if (!checkSession()) {
+                return;
+            }
+        });
+
         // Navigation
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -878,6 +896,8 @@
         // Logout function
         function logout() {
             if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+                // Clear session
+                sessionStorage.removeItem('adminSession');
                 window.location.href = 'admin-login.html';
             }
         }
@@ -979,6 +999,26 @@
                     sidebar.classList.remove('open');
                 }
             }
+        });
+
+        // Session timeout check (every 5 minutes)
+        setInterval(function() {
+            const sessionToken = sessionStorage.getItem('adminSession');
+            if (!sessionToken) {
+                alert('Oturum süresi doldu. Lütfen tekrar giriş yapın.');
+                window.location.href = 'admin-login.html';
+            }
+        }, 300000); // 5 minutes
+
+        // Prevent access to developer tools (basic protection)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+            }
+        });
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
         });
     </script>
 </body>

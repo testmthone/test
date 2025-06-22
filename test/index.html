@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ben Kimim - Kişisel Portföy</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,7 +12,7 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
             color: #1a1a2e;
             overflow-x: hidden;
@@ -298,12 +296,18 @@
             width: 300px;
             height: 300px;
             border-radius: 50%;
-            object-fit: cover;
+            background: linear-gradient(135deg, #409cff, #7bb3ff);
             border: 8px solid rgba(64, 156, 255, 0.3);
             box-shadow: 
                 0 20px 40px rgba(0, 0, 0, 0.3),
                 0 0 50px rgba(64, 156, 255, 0.2);
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0f1419;
+            font-size: 2rem;
+            font-weight: bold;
         }
 
         .profile-image:hover {
@@ -669,6 +673,28 @@
                 0 0 10px rgba(64, 156, 255, 0.5),
                 0 1px 2px rgba(0, 0, 0, 0.3);
         }
+
+        /* Simple Icons */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: middle;
+            fill: currentColor;
+        }
+
+        .icon-user:before { content: "👤"; }
+        .icon-shield:before { content: "🛡️"; }
+        .icon-cart:before { content: "🛒"; }
+        .icon-mobile:before { content: "📱"; }
+        .icon-chart:before { content: "📊"; }
+        .icon-envelope:before { content: "✉️"; }
+        .icon-phone:before { content: "📞"; }
+        .icon-location:before { content: "📍"; }
+        .icon-github:before { content: "🐙"; }
+        .icon-linkedin:before { content: "💼"; }
+        .icon-twitter:before { content: "🐦"; }
+        .icon-instagram:before { content: "📷"; }
     </style>
 </head>
 <body>
@@ -679,7 +705,7 @@
 
     <!-- Admin Login Button -->
     <a href="admin-login.html" class="admin-login-btn">
-        <i class="fas fa-user-shield"></i> Admin
+        <span class="icon-shield"></span> Admin
     </a>
 
     <!-- Navigation -->
@@ -732,7 +758,7 @@
                 </div>
             </div>
             <div class="about-image">
-                <img src="https://via.placeholder.com/300x300/409cff/ffffff?text=Profil" alt="Profil Fotoğrafı" class="profile-image">
+                <div class="profile-image">AT</div>
             </div>
         </div>
     </section>
@@ -743,7 +769,7 @@
         <div class="projects-grid">
             <div class="project-card fade-in">
                 <div class="project-image">
-                    <i class="fas fa-shopping-cart"></i>
+                    <span class="icon-cart"></span>
                 </div>
                 <div class="project-content">
                     <h3 class="project-title">E-Ticaret Platformu</h3>
@@ -759,7 +785,7 @@
 
             <div class="project-card fade-in">
                 <div class="project-image">
-                    <i class="fas fa-mobile-alt"></i>
+                    <span class="icon-mobile"></span>
                 </div>
                 <div class="project-content">
                     <h3 class="project-title">Mobil Uygulama</h3>
@@ -775,7 +801,7 @@
 
             <div class="project-card fade-in">
                 <div class="project-image">
-                    <i class="fas fa-chart-line"></i>
+                    <span class="icon-chart"></span>
                 </div>
                 <div class="project-content">
                     <h3 class="project-title">Dashboard Uygulaması</h3>
@@ -800,30 +826,30 @@
                 <p>Projeleriniz için birlikte çalışabiliriz. Aşağıdaki kanallardan bana ulaşabilirsiniz.</p>
                 
                 <div class="contact-item">
-                    <i class="fas fa-envelope"></i>
+                    <span class="icon-envelope"></span>
                     <span>email@example.com</span>
                 </div>
                 <div class="contact-item">
-                    <i class="fas fa-phone"></i>
+                    <span class="icon-phone"></span>
                     <span>+90 555 123 4567</span>
                 </div>
                 <div class="contact-item">
-                    <i class="fas fa-map-marker-alt"></i>
+                    <span class="icon-location"></span>
                     <span>İstanbul, Türkiye</span>
                 </div>
 
                 <div class="social-links">
                     <a href="#" class="social-link">
-                        <i class="fab fa-github"></i>
+                        <span class="icon-github"></span>
                     </a>
                     <a href="#" class="social-link">
-                        <i class="fab fa-linkedin"></i>
+                        <span class="icon-linkedin"></span>
                     </a>
                     <a href="#" class="social-link">
-                        <i class="fab fa-twitter"></i>
+                        <span class="icon-twitter"></span>
                     </a>
                     <a href="#" class="social-link">
-                        <i class="fab fa-instagram"></i>
+                        <span class="icon-instagram"></span>
                     </a>
                 </div>
             </div>
@@ -854,11 +880,11 @@
     </footer>
 
     <script>
-        // Loading screen - shortened to 500ms
+        // Loading screen - 1 second
         window.addEventListener('load', function() {
             setTimeout(() => {
                 document.getElementById('loading').classList.add('hidden');
-            }, 500);
+            }, 1000);
         });
 
         // Smooth scrolling for navigation links
@@ -933,31 +959,6 @@
             const hero = document.querySelector('.hero');
             const rate = scrolled * -0.5;
             hero.style.transform = `translateY(${rate}px)`;
-        });
-
-        // Typing effect for hero title - shortened duration
-        function typeWriter(element, text, speed = 50) {
-            let i = 0;
-            element.innerHTML = '';
-            
-            function type() {
-                if (i < text.length) {
-                    element.innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                }
-            }
-            
-            type();
-        }
-
-        // Initialize typing effect when page loads - shorter delay
-        window.addEventListener('load', function() {
-            setTimeout(() => {
-                const heroTitle = document.querySelector('.hero-title');
-                const originalText = heroTitle.textContent;
-                typeWriter(heroTitle, originalText, 50);
-            }, 800);
         });
 
         // Add hover effects to project cards
