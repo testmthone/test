@@ -1,29 +1,31 @@
-# Workflow'un adı
-name: Deploy to Server via Self-Hosted Runner
+name: Deploy with Debugging
 
-# Tetikleyici: main veya master dalına push yapıldığında
 on:
   push:
     branches: [ main, master ]
 
 jobs:
   deploy:
-    # Kendi sunucumuzdaki agent'ı kullan diyoruz
     runs-on: self-hosted
 
     steps:
-      # Adım 1: Proje kodunu GitHub'dan agent'ın çalışma alanına indir.
-      # Bu adım, deponuzdaki TÜM dosyaları (deploy.sh, docker-compose.yml vb.)
-      # agent'ın bulunduğu geçici klasöre kopyalar.
+      # Adım 1: Kodu indir
       - name: Checkout Repository Code
         uses: actions/checkout@v4
 
-      # Adım 2: Deployment betiğini çalıştır.
-      # Artık deploy.sh dosyası bu çalışma alanında mevcut!
+      # Adım 2: HATA AYIKLAMA ADIMI - Dosyaların nerede olduğunu kontrol et
+      - name: Check File Structure
+        run: |
+          echo "###########################################"
+          echo "Çalışma alanının içeriği:"
+          ls -lR
+          echo "###########################################"
+
+      # Adım 3: Deployment betiğini çalıştır
       - name: Run Deployment Script
         run: |
           echo "🚀 Deployment betiği çalıştırılıyor..."
-          # deploy.sh'i çalıştırılabilir yap ve çalıştır
+          # Bu satır hala hata verecek ama yukarıdaki loglar bize nedenini söyleyecek
           chmod +x deploy.sh
           ./deploy.sh
           echo "✅ Deployment script'i tamamlandı."
