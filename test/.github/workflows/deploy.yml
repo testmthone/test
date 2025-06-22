@@ -19,7 +19,7 @@ jobs:
         
         # Deploy
         ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-          cd ${{ secrets.DEPLOY_PATH || '/var/www/portfolio' }}
+          cd /var/www/portfolio
           git pull origin main
           chmod +x deploy.sh
           ./deploy.sh
