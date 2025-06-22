@@ -1,4 +1,6 @@
-name: Deploy with Debugging
+# main.yml dosyasının son ve doğru hali
+
+name: Deploy Project - FINAL
 
 on:
   push:
@@ -7,25 +9,22 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-
+    
     steps:
-      # Adım 1: Kodu indir
+      # Adım 1: Kodu indirir (ve 'test' adında bir alt klasör oluşturur)
       - name: Checkout Repository Code
         uses: actions/checkout@v4
 
-      # Adım 2: HATA AYIKLAMA ADIMI - Dosyaların nerede olduğunu kontrol et
-      - name: Check File Structure
-        run: |
-          echo "###########################################"
-          echo "Çalışma alanının içeriği:"
-          ls -lR
-          echo "###########################################"
-
-      # Adım 3: Deployment betiğini çalıştır
+      # Adım 2: Proje dosyalarının olduğu doğru klasöre gir ve betiği çalıştır
       - name: Run Deployment Script
         run: |
+          # ÖNCE DOĞRU KLASÖRE GİRİYORUZ
+          cd test
+          
           echo "🚀 Deployment betiği çalıştırılıyor..."
-          # Bu satır hala hata verecek ama yukarıdaki loglar bize nedenini söyleyecek
+          
+          # Artık doğru klasörde olduğumuz için bu komutlar çalışacaktır
           chmod +x deploy.sh
           ./deploy.sh
+          
           echo "✅ Deployment script'i tamamlandı."
