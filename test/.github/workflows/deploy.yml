@@ -1,44 +1,36 @@
-name: Deploy to Server
+# Workflow'un adı
+name: Deploy Portfolio Project
 
+# Tetikleyici: main veya master dalına push yapıldığında
 on:
   push:
     branches: [ main, master ]
 
 jobs:
   deploy:
-    runs-on: [self-hosted, mthserver]
-    
+    # Sadece 'self-hosted' demeniz yeterli. Agent'ınız bu işi otomatik olarak alacaktır.
+    runs-on: self-hosted
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup SSH and Deploy
+    - name: Deploy Project
+      # SSH ile ilgili her şeyi siliyoruz!
+      # Komutlar zaten sunucunun içinde olduğu için doğrudan çalışıyor.
       run: |
-        # Setup SSH securely
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+        # set -e: herhangi bir komut hata verirse script'i anında durdurur (güvenlik için)
+        set -e
         
-        # Deploy with error handling
-        ssh -i ~/.ssh/id_rsa ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-          set -e  # Exit on any error
-          
-          echo "🚀 Starting deployment on mthserver..."
-          cd /var/www/portfolio || { echo "❌ Directory not found"; exit 1; }
-          
-          echo "📥 Pulling latest changes..."
-          git pull origin main || { echo "❌ Git pull failed"; exit 1; }
-          
-          echo "🔧 Running deployment script..."
-          chmod +x deploy.sh
-          ./deploy.sh || { echo "❌ Deploy script failed"; exit 1; }
-          
-          echo "✅ Deployment completed successfully on mthserver!"
-        EOF
+        echo "🚀 Deployment basliyor..."
         
-    - name: Cleanup SSH
-      if: always()
-      run: |
-        rm -f ~/.ssh/id_rsa
-        echo "🧹 SSH cleanup completed on mthserver"
+        # Projenin sunucudaki tam yoluna gidiyoruz
+        # NOT: Bu klasörün sunucuda var olduğundan emin olun!
+        cd /var/www/portfolio
+        
+        echo "📥 Guncellemeler GitHub'dan cekiliyor..."
+        git pull origin main
+        
+        echo "🔧 Deployment betigi calistiriliyor..."
+        # Eğer projenizde deploy.sh dosyası varsa bu satırlar kalmalı
+        chmod +x deploy.sh
+        ./deploy.sh
+        
+        echo "✅ Deployment tamamlandi!"

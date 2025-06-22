@@ -317,6 +317,98 @@ Herhangi bir sorun yaşarsanız:
 - **Admin Panel**: `http://YOUR_SERVER_IP:5000/admin/login`
 - **Giriş Bilgileri**: `admin` / `admin123`
 
+## MTHServer Self-Hosted Runner Yönetimi
+
+### 🖥️ Runner Bilgileri
+- **Runner Adı**: `mthserver`
+- **Etiketler**: `[self-hosted, mthserver]`
+- **Hedef**: Sadece bu runner deployment job'larını alacak
+
+### 🔍 Runner Durumu Kontrol
+
+```bash
+# mthserver runner durumunu kontrol et
+sudo systemctl status actions.runner.mthserver*
+
+# Runner loglarını izle
+journalctl -u actions.runner.mthserver* -f
+
+# Runner process'ini kontrol et
+ps aux | grep actions.runner
+```
+
+### 🔄 Runner Yönetimi
+
+```bash
+# mthserver runner'ı yeniden başlat
+sudo systemctl restart actions.runner.mthserver*
+
+# Runner'ı durdur
+sudo systemctl stop actions.runner.mthserver*
+
+# Runner'ı başlat
+sudo systemctl start actions.runner.mthserver*
+```
+
+### 📈 Runner Performansı
+
+```bash
+# Sistem kaynaklarını kontrol et
+htop
+free -h
+df -h
+
+# Network bağlantısını test et
+ping github.com
+curl -I https://api.github.com
+```
+
+### 🔧 Troubleshooting
+
+#### Runner Offline Görünüyor?
+```bash
+# 1. Service durumunu kontrol et
+sudo systemctl status actions.runner.mthserver*
+
+# 2. GitHub bağlantısını test et
+curl -H "Authorization: token YOUR_TOKEN" https://api.github.com/user
+
+# 3. Runner'ı yeniden kaydet
+cd /home/github-runner/actions-runner
+./config.sh remove --token YOUR_TOKEN
+./config.sh --url https://github.com/USERNAME/REPO --token YOUR_TOKEN --labels mthserver
+sudo ./svc.sh install
+sudo ./svc.sh start
+```
+
+#### Deployment Başarısız Oluyor?
+```bash
+# 1. SSH bağlantısını test et
+ssh -i ~/.ssh/deploy_key user@target_server
+
+# 2. Deploy script'ini manuel test et
+cd /var/www/portfolio
+./deploy.sh
+
+# 3. Permissions'ları kontrol et
+ls -la /var/www/portfolio/
+```
+
+### 🚀 Deployment Workflow
+
+1. **Code push** → `main` branch
+2. **GitHub Actions** → `mthserver` runner'ı seçer
+3. **Runner** → SSH ile target server'a bağlanır
+4. **Deploy** → `deploy.sh` script'i çalışır
+5. **Success** → Site güncellenir
+
+### 💡 İpuçları
+
+- Runner'ınız 24/7 çalışır durumda olmalı
+- Düzenli olarak sistem güncellemelerini yapın
+- Disk alanını kontrol edin (logs büyüyebilir)
+- GitHub token'ınızı düzenli olarak yenileyin
+
 ## Self-Hosted Runner Güvenlik Rehberi
 
 ### 🔒 Güvenlik Önlemleri
