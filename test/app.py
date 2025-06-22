@@ -204,6 +204,23 @@ def api_messages():
         'is_read': m.is_read
     } for m in messages])
 
+@app.route('/api/messages/<int:message_id>')
+@login_required
+def api_message(message_id):
+    if not current_user.is_admin:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    message = Message.query.get_or_404(message_id)
+    return jsonify({
+        'id': message.id,
+        'name': message.name,
+        'email': message.email,
+        'subject': message.subject,
+        'message': message.message,
+        'created_at': message.created_at.isoformat(),
+        'is_read': message.is_read
+    })
+
 @app.route('/api/messages/<int:message_id>/read', methods=['POST'])
 @login_required
 def mark_message_read(message_id):
