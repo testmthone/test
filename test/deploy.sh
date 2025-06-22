@@ -3,13 +3,6 @@
 # Simple Portfolio Deployment Script
 echo "🚀 Portfolio Deployment Başlatılıyor..."
 
-# Git pull
-echo "📥 Kod güncelleniyor..."
-git pull origin main || {
-    echo "❌ Git pull başarısız!"
-    exit 1
-}
-
 # Docker containers restart
 echo "🐳 Containers yeniden başlatılıyor..."
 docker-compose down
